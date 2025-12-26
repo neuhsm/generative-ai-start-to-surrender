@@ -1,0 +1,5392 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../introduction_sde/">
+      
+      
+        <link rel="next" href="../score_based_sde/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>SDE for DDPM - Generative AI: From Start to Surrender</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config",""),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#stochastic-differential-equation-for-ddpm" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-header__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Generative AI: From Start to Surrender
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SDE for DDPM
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to system preference" type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5M7 15a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter1_Introduction/1.1terminology/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter2_generation_theory/mle/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Generation Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter3_energy_based_model/introduction/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Energy Based Models
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter6_VAE/vae_introduction/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  VAE
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  GANs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ddpm/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Diffusion Models
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter9_flow_matching/introduction/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Flow Matching
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Hybrid SOTA Models
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chapter12_applications/diffusion_anomaly_detection/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Application
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Generative AI: From Start to Surrender" class="md-nav__button md-logo" aria-label="Generative AI: From Start to Surrender" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Generative AI: From Start to Surrender
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Introduction
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.1terminology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.2fourier_transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fourier Transform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.3signal_processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Signal Processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/1.4statistics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter1_Introduction/tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Generation Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/mle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maximal Likelihood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/manifold_hypothesis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manifold Hypothesis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter2_generation_theory/generative_model_category/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generative Model Category
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Energy Based Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Energy Based Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/score_function/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Score Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/sampling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sampling Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/cd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contrastive Divergence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter3_energy_based_model/score_matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Score Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VAE
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VAE
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6_VAE/vae_introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter6_VAE/vq_vae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VA-VAE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GANs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GANs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From GAN to StyleGAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2">
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    StyleGAN Variants
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    StyleGAN Variants
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.3stylegan/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    StyleGAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.4stylegan2/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    StyleGAN2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.5stylegan3/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    StyleGAN3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.6styleganT/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    StyleGAN-T
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/3.7R3Gan/paper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    R3GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter5_GAN/vq_gan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VQ-GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Diffusion Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_1">
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Discrete Diffusion
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Discrete Diffusion
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddpm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DDPM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ldm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LDM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ldm_handson/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LDM Handson
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diffusion_model_varients/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diffusion Model Varients
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../general_diffusion_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    General Diffusion Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SDE Diffusion
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    SDE Diffusion
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction_sde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SDE Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SDE for DDPM
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SDE for DDPM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-forward-diffusion-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Forward Diffusion Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-reverse-diffusion-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Reverse Diffusion Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Reverse Diffusion Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-fokkerplanck-forward-kolmogorov-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Fokker–Planck (Forward Kolmogorov) Equation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-strategy-diffusion-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Strategy Diffusion Derivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-stochastic-differential-equation-sde-for-ddpm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Stochastic Differential Equation (SDE) for DDPM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Stochastic Differential Equation (SDE) for DDPM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-discrete-forward-process-in-ddpm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Discrete Forward Process in DDPM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-splitting-large-steps-via-gaussian-additivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Splitting Large Steps via Gaussian Additivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-from-discrete-updates-to-a-continuous-sde" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 From Discrete Updates to a Continuous SDE
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-summary-of-correspondence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Summary of Correspondence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-network-output-noise-prediction-vs-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Network Output: Noise Prediction vs. Score
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-appendix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Appendix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Appendix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-what-is-the-fokkerplanck-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 What is the Fokker–Planck Equation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-when-does-the-probability-follow-the-fokkerplanck-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 When Does the Probability Follow the Fokker–Planck Equation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Intuitive Interpretation of Drift and Diffusion in the Fokker–Planck Equation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../score_based_sde/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Score Based SDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../probability_flow_ode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Probability Flow ODE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sde_diffusion_speedup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SDE Diffusion Speedup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sde_diffusion_unified_representation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scaling and Scheduling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_3">
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diffusion Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Diffusion Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DiT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DiT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_4">
+        
+          
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diffusion Solver
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Diffusion Solver
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diffusion_solver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DPM Solver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7_5">
+        
+          
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conditional Diffusion
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Conditional Diffusion
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controlnet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ControlNet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sde_diffusion_guidance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SDE Diffusion Guidance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8">
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow Matching
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flow Matching
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/probability_with_velocity_field/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Probability Path and Velocity Fields
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/flow_matching_theory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flow Matching Theorem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/affine_conditional_flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Affine Conditional Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/optimal_transport_flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimal Transport Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter9_flow_matching/comparison_with_flow_ode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison with Diffusion Flow ODE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9">
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid SOTA Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid SOTA Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/hybrid_methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_closed_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Closed Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_3">
+        
+          
+          <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Open Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Open Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/dalle_series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dalle Series
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_3_2">
+        
+          
+          <label class="md-nav__link" for="__nav_9_3_2" id="__nav_9_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stable Diffusion Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stable Diffusion Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_xl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stable Diffusion XL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stable Diffusion 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_5_reading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stable Diffusion 3.5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9_3_3">
+        
+          
+          <label class="md-nav__link" for="__nav_9_3_3" id="__nav_9_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flux
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Flux
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/flux1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flux.1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/flux.1_kontext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Flux.1 Kontext
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/sota_open_models/qwen_image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Qwen-Image
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter11_hybrid_sota_models/trends_future/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Future Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10">
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10_1">
+        
+          
+          <label class="md-nav__link" for="__nav_10_1" id="__nav_10_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anomaly Detection
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Anomaly Detection
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/diffusion_anomaly_detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diffusion Anomaly Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10_2">
+        
+          
+          <label class="md-nav__link" for="__nav_10_2" id="__nav_10_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepfake Detection
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepfake Detection
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection_structured/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    总览
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/FOCAL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FOCAL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/PSCC-Net/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PSCC-Net
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/DeCLIP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeCLIP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/FakeLocator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FakeLocator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/Weakly-supervised-Deepfake-Localization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Weakly-supervised Deepfake Localization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/FSBI/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FSBI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/DE-FAKE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DE-FAKE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/DADF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DADF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/SIDA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SIDA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/UnivCLIP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UnivCLIP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/Multi-Attention-Based-Approach/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Attention-Based-Approach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/Mastering-Deepfake-Detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mastering-Deepfake-Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/Leveraging-Frequency-Analysis-for-Deep-Fake-Image-Recognition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Leveraging-Frequency-Analysis-for-Deep-Fake-Image-Recognition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chapter12_applications/deepfake_detection/An-Analysis-of-Recent-Advances-in-Deepfake-Image-Detection-in-an-Evolving-Threat-Landscape/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    An-Analysis-of-Recent-Advances-in-Deepfake-Image-Detection-in-an-Evolving-Threat-Landscape
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="stochastic-differential-equation-for-ddpm">Stochastic Differential Equation for DDPM<a class="headerlink" href="#stochastic-differential-equation-for-ddpm" title="Permanent link">¶</a></h1>
+<p>In this section, we will explore how Stochastic Differential Equations (SDEs) are connected to the denoising diffusion probabilistic model and the denoising score matching.</p>
+<h2 id="1-forward-diffusion-process">1. Forward Diffusion Process<a class="headerlink" href="#1-forward-diffusion-process" title="Permanent link">¶</a></h2>
+<p>The forward diffusion process is described by a stochastic differential equation (SDE) that gradually adds noise to the data. The general form of this forward SDE is:</p>
+<div class="arithmatex">\[
+ \tag{1}
+dx \;=\; f(x,t)\,dt \;+\; g(t)\,dW_t
+\]</div>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(f(x,t)\)</span> is the drift term that controls the deterministic evolution</li>
+<li><span class="arithmatex">\(g(t)\)</span> is the diffusion coefficient that modulates the noise intensity</li>
+<li><span class="arithmatex">\(W_t\)</span> represents a standard Wiener process (Brownian motion)</li>
+<li><span class="arithmatex">\(p_t(x)\)</span> denotes the probability density of the state <span class="arithmatex">\(x\)</span> at time <span class="arithmatex">\(t\)</span></li>
+</ul>
+<p>For simplicity, we assume <span class="arithmatex">\(g(t)\)</span> depends only on time, not space, though it may vary throughout the diffusion process.</p>
+<h2 id="2-reverse-diffusion-process">2. Reverse Diffusion Process<a class="headerlink" href="#2-reverse-diffusion-process" title="Permanent link">¶</a></h2>
+<p>The reverse diffusion process describes how we can recover the original data distribution by reversing the noise addition process. For a system with probability density <span class="arithmatex">\(p_t(x)\)</span> at time <span class="arithmatex">\(t\)</span>, the Fokker-Planck equation yields the following reverse SDE:</p>
+<div class="arithmatex">\[
+\tag{2}
+ dx \;=\;
+\bigl[f(x,t)\;-\;g(t)^2\,\nabla_x \log p_{t}(x)\bigr]\;dt \;+\; g(t)\,d\overline{W}_t
+\]</div>
+<p>This equation has two key components:</p>
+<ol>
+<li>A drift term <span class="arithmatex">\(f(x,t)\)</span> from the forward process</li>
+<li>A score-based correction term <span class="arithmatex">\(-g(t)^2\,\nabla_x \log p_{t}(x)\)</span> that guides the system toward higher probability regions</li>
+</ol>
+<p>In the following sections, we'll derive this backward diffusion equation and explain why it correctly describes the time-reversal of our forward process.</p>
+<h3 id="21-fokkerplanck-forward-kolmogorov-equation">2.1 Fokker–Planck (Forward Kolmogorov) Equation<a class="headerlink" href="#21-fokkerplanck-forward-kolmogorov-equation" title="Permanent link">¶</a></h3>
+<p>The density <span class="arithmatex">\(p_t(x)\)</span> satisfies the Fokker–Planck (or forward‐Kolmogorov) PDE</p>
+<div class="arithmatex">\[\tag{3}
+ \frac{\partial p_t(x)}{\partial t}
+\;=\;
+-\nabla\!\cdot\!\bigl[f(x,t)\,p_t(x)\bigr]
+\;+\;
+\frac{1}{2}\,g(t)^2\,\Delta p_t(x),
+\]</div>
+<p>where <span class="arithmatex">\(\Delta\)</span> is the Laplacian in <span class="arithmatex">\(x\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">note</p>
+<p>In <strong>one dimension</strong> , the Laplacian simplifies to:</p>
+<div class="arithmatex">\[
+\Delta p_t(x) = \frac{\partial^2 p_t(x)}{\partial x^2}
+\]</div>
+<p>In <strong>higher dimensions</strong> , the Laplacian is given by:</p>
+<div class="arithmatex">\[
+\Delta p_t(x) = \sum_{i=1}^{d} \frac{\partial^2 p_t(x)}{\partial x_i^2}
+\]</div>
+<p>where <span class="arithmatex">\(d\)</span> is the dimension of the space. Thus, in the context of the <strong>Fokker-Planck equation</strong>, the Laplacian term governs the <strong>diffusive spreading</strong>  of the probability density due to the noise term <span class="arithmatex">\(g(t) dW_t\)</span> in the associated SDE.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Importance of the Fokker-Planck Equation</p>
+<p>The Fokker-Planck equation (also known as the <strong>forward Kolmogorov equation</strong>) is a fundamental equation that describes the temporal evolution of probability distributions in stochastic processes. Its significance spans multiple fields including physics, finance, biology, and chemistry. Here's why it's crucial:</p>
+<p><strong>1. Evolution of Probability Distributions</strong>
+The Fokker-Planck equation computes the probability distribution of a system described by <strong>Stochastic Differential Equations (SDEs)</strong> at different time points, rather than tracking individual sample paths. This provides a complete statistical description of the system's behavior.
+This represents a fundamental shift in how we model system evolution:
+- In <strong>deterministic systems</strong>, we use <strong>Ordinary Differential Equations (ODEs)</strong> to describe the evolution of states directly
+- In <strong>stochastic systems</strong>, we use the <strong>Fokker-Planck equation</strong> to describe how the <strong>Probability Density Function (PDF)</strong> of states evolves over time</p>
+<p><strong>2. Bridging SDEs and Probability Distributions</strong>
+While Stochastic Differential Equations (SDEs) typically simulate individual sample paths, the Fokker-Planck equation provides a more comprehensive view of the <strong>probability distribution evolution</strong>:
+- SDE 给出的是<strong>随机轨迹</strong>，而 Fokker-Planck 方程提供了<strong>整体统计特性</strong>。
+- 通过求解 Fokker-Planck 方程，可以获得系统的<strong>稳态分布</strong>，甚至预测其长期行为。</p>
+<p><strong>3. 适用于多个科学领域</strong>
+Fokker-Planck 方程在多个学科领域都具有广泛应用</p>
+<ul>
+<li><strong>统计物理与热力学</strong><ul>
+<li>描述<strong>布朗运动</strong>（粒子在流体中的扩散）。</li>
+<li>用于<strong>朗之万方程（Langevin equation）</strong>的概率描述，研究噪声对物理系统的影响。</li>
+<li>计算<strong>非平衡系统的稳态分布</strong>，例如电场中的带电粒子运动。</li>
+</ul>
+</li>
+<li><strong>生物学与生态系统</strong><ul>
+<li>在<strong>种群动力学</strong>中，描述随机环境下的种群演化（如随机 Logistic 模型）。</li>
+<li>研究<strong>神经元放电</strong>中的随机效应（Fokker-Planck 形式的<strong>神经动力学模型</strong>）。</li>
+<li>研究<strong>蛋白质折叠</strong>和<strong>细胞信号传导</strong>中的分子噪声影响。</li>
+</ul>
+</li>
+<li><strong>金融与经济学</strong><ul>
+<li>在<strong>金融数学</strong>中，Fokker-Planck 方程与<strong>Black-Scholes 方程</strong>（用于期权定价）密切相关。</li>
+<li>描述<strong>股票价格分布</strong>，建模市场中资产价格的演化。</li>
+<li>用于计算<strong>风险分布</strong>，分析投资组合的长期收益分布。</li>
+</ul>
+</li>
+<li><strong>化学与分子动力学</strong><ul>
+<li>研究化学反应中的<strong>随机过程</strong>，如<strong>反应扩散系统</strong>。</li>
+<li>在<strong>分子动力学</strong>中，描述带噪声的粒子运动，如<strong>高分子扩散</strong>。</li>
+</ul>
+</li>
+</ul>
+<p><strong>4. 计算稳态解与动态分布</strong>
+- 在长时间极限下，Fokker-Planck 方程的解可能趋于<strong>稳态分布</strong>（平衡解），用于分析长期稳定性。
+- 在短时间范围内，方程提供了<strong>时间演化信息</strong>，帮助研究系统的短期行为。</p>
+<p><strong>总结</strong>
+Fokker-Planck 方程是<strong>随机动力系统的核心工具</strong>，能够在<strong>多种科学和工程领域</strong>中提供概率分布的详细描述。相比单纯使用 SDE 进行模拟，Fokker-Planck 方程提供了更深入的数学理解，特别是在<strong>稳态分析、分布演化</strong>以及<strong>随机系统长期行为预测</strong>方面具有重要意义。</p>
+<p>✅ SDE 描述个体行为，是随机的。
+✅ FPE 描述总体概率分布，是确定的。
+✅ FPE 提供了更稳定的系统描述，可用于长期分析和稳态计算。</p>
+</div>
+<p>Now we prove that the reverse diffusion formula</p>
+<h3 id="22-strategy-diffusion-derivation">2.2 Strategy Diffusion Derivation<a class="headerlink" href="#22-strategy-diffusion-derivation" title="Permanent link">¶</a></h3>
+<p>We want an SDE whose sample paths “run backward” in time with the <em>same</em> distributions as <span class="arithmatex">\((x_t)\)</span>
+ running forward. Concretely, define</p>
+<div class="arithmatex">\[
+ \hat{X}_s \;=\; x_{T - s}
+\quad
+\text{for } 0 \le s \le T.
+\]</div>
+<p>That is, <span class="arithmatex">\(\hat{X}_0 = x_{T}\)</span>, <span class="arithmatex">\(\hat{X}_T = x_0\)</span>. Our goal is to find a stochastic differential
+equation of the form</p>
+<div class="arithmatex">\[
+ \tag{4}
+d\hat{X}_s
+\;=\; \hat{f}\bigl(\hat{X}_s, s\bigr)\,ds
+\;+\;
+g(T-s)\,d\overline{W}_s
+\]</div>
+<p>(where <span class="arithmatex">\(\overline{W}_s\)</span> is another Wiener process) such that <span class="arithmatex">\(\hat{X}_s\)</span> has the <em>same</em> distribution as <span class="arithmatex">\(x_{T-s}\)</span>.In other words, if <span class="arithmatex">\(q_s(x)\)</span> denotes the density of <span class="arithmatex">\(\hat{X}_s\)</span>, we want <span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span>. We must determine the drift <span class="arithmatex">\(\hat{f}(x,s)\)</span>.</p>
+<h4 id="221-matching-probability-densities-via-fokkerplanck">2.2.1 Matching Probability Densities via Fokker–Planck<a class="headerlink" href="#221-matching-probability-densities-via-fokkerplanck" title="Permanent link">¶</a></h4>
+<p>If <span class="arithmatex">\(\hat{X}_s\)</span> satisfies</p>
+<div class="arithmatex">\[
+ d\hat{X}_s
+= \hat{f}(\hat{X}_s, s)\,ds
+\;+\;
+g(T-s)\,d\overline{W}_s,
+\]</div>
+<p>then its density <span class="arithmatex">\(q_s(x)\)</span> obeys</p>
+<div class="arithmatex">\[
+ \frac{\partial q_s(x)}{\partial s}
+\;=\;
+-\nabla \cdot \bigl[\hat{f}(x, s)\;q_s(x)\bigr]
+\;+\;
+\frac{1}{2}\,g(T-s)^2\;\Delta\,q_s(x).
+\]</div>
+<p>We require <span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span>. Substitute <span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span> into the PDE. Note that</p>
+<div class="arithmatex">\[
+ \frac{\partial}{\partial s}\,p_{T-s}(x)
+\;=\;
+-\,\frac{\partial}{\partial t}\,p_{t}(x)\Bigr|_{\,t=T-s}.
+\]</div>
+<p>Hence</p>
+<div class="arithmatex">\[
+ \frac{\partial q_s}{\partial s}(x)
+\;=\;
+-\,\frac{\partial}{\partial t}\,p_{t}(x)\Bigr|_{t=T-s}.
+\]</div>
+<p>But from the <em>forward</em> Fokker–Planck equation, we know</p>
+<div class="arithmatex">\[
+ \frac{\partial}{\partial t}\,p_{t}(x)
+\;=\;
+-\nabla\!\cdot\!\bigl[f(x,t)\,p_t(x)\bigr]
++\tfrac{1}{2}\,g(t)^2\,\Delta\,p_t(x).
+\]</div>
+<p>Putting <span class="arithmatex">\(t = T-s\)</span> and changing the sign, we get</p>
+<div class="arithmatex">\[
+ \frac{\partial q_s}{\partial s}(x)
+\;=\;
++\nabla\!\cdot\!\bigl[f(x,T-s)\,p_{T-s}(x)\bigr]
+\;-\;
+\tfrac{1}{2}\,g(T-s)^2\,\Delta\,p_{T-s}(x).
+\]</div>
+<p>Identifying the reversed drift <span class="arithmatex">\(\hat{f}\)</span> Meanwhile, from the PDE for <span class="arithmatex">\(q_s\)</span> we also have</p>
+<div class="arithmatex">\[
+\frac{\partial q_s}{\partial s}(x)
+\;=\;
+-\,\nabla\!\cdot\!\bigl[\hat{f}(x,s)\,q_s(x)\bigr]
+\;+\;
+\tfrac12\,g(T-s)^2\,\Delta\,q_s(x).
+\]</div>
+<p>Because <span class="arithmatex">\(q_s(x) = p_{T-s}(x)\)</span>, we can equate the two expressions. Matching terms gives</p>
+<div class="arithmatex">\[
+\nabla\!\cdot\!\bigl[\hat{f}(x,s)\,p_{T-s}(x)\bigr]
+\;=\;
+-\,\nabla\!\cdot\!\bigl[f(x,T-s)\,p_{T-s}(x)\bigr]
+\;+\;
+g(T-s)^2 \,\nabla \!\cdot\!\bigl[\tfrac12\,p_{T-s}(x)\bigr],
+\]</div>
+<p>where we used that</p>
+<div class="arithmatex">\[
+\Delta\,p_{T-s}(x) = \nabla \cdot (\nabla\,p_{T-s}(x))
+\]</div>
+<p>Rearrange:</p>
+<div class="arithmatex">\[
+ \nabla\!\cdot\!\Bigl[\hat{f}(x,s)\,p_{T-s}(x)\Bigr]
+\;=\;
+-\nabla\!\cdot\!\Bigl[f(x,T-s)\,p_{T-s}(x)\Bigr]
+\;+\;
+\tfrac12\,g(T-s)^2\,\nabla \cdot\!\Bigl[\nabla\,p_{T-s}(x)\Bigr].
+\]</div>
+<p>We can factor out <span class="arithmatex">\(p_{T-s}(x)\)</span> to write</p>
+<div class="arithmatex">\[
+\hat{f}(x,s)\,p_{T-s}(x)
+\;=\;
+f(x,T-s)\,p_{T-s}(x)
+\;-\;
+\tfrac12\,g(T-s)^2\,\nabla\,p_{T-s}(x)
+\;+\;
+\text{(gradient‐free constant in } x\text{)},
+\]</div>
+<p>but the divergence‐free “constant” in <span class="arithmatex">\(x\)</span> must be zero if we want the correct boundary conditions at infinity and a well‐defined velocity field. Dividing both sides by <span class="arithmatex">\(p_{T-s}(x)\)</span> then yields</p>
+<div class="arithmatex">\[
+\hat{f}(x,s)
+\;=\;
+f(x,T-s)
+\;-\;
+\tfrac12\,g(T-s)^2\,\nabla \log p_{T-s}(x).
+\]</div>
+<p>This is precisely the extra “score‐function” correction term discovered by Nelson and Anderson.</p>
+<h4 id="222-final-reverse-sde">2.2.2 Final Reverse SDE<a class="headerlink" href="#222-final-reverse-sde" title="Permanent link">¶</a></h4>
+<p>Hence the <em>reversed</em> SDE can be written as</p>
+<div class="arithmatex">\[
+\boxed{
+d\hat{X}_s
+\;=\;
+\Bigl[
+f(\hat{X}_s,\,T-s)
+\;-\;
+\tfrac12\,g(T-s)^2\,\nabla \log p_{T-s}(\hat{X}_s)
+\Bigr]\;ds
+\;+\;
+g(T-s)\,d\overline{W}_s.
+}
+\]</div>
+<p>Often one writes the time variable in the same forward direction and just says
+“the reverse‐time SDE from <span class="arithmatex">\(t\)</span> down to 0 is</p>
+<div class="arithmatex">\[
+dx \;=\;
+\bigl[f(x,t)\;-\;g(t)^2\,\nabla_x \log p_{t}(x)\bigr]\;dt \;+\; g(t)\,d\overline{W}_t,
+\]</div>
+<p>where <span class="arithmatex">\(\overline{W}_t\)</span> is a standard Wiener process <em>when viewed backward</em> in the original clock. In either notation, the key extra piece is <span class="arithmatex">\(\,-\,g^{2}\nabla\log p_{t}(\cdot)\)</span>, which ensures the <em>distributions</em> truly run in reverse.</p>
+<ul>
+<li>
+<p>The drift in the reverse process must “compensate” for how diffusion was spreading mass forward in time.</p>
+</li>
+<li>
+<p>This compensation appears as <span class="arithmatex">\(\,-\,\tfrac12\,g^2 \nabla \log p_t(x)\)</span>.</p>
+</li>
+<li>
+<p>Equivalently, one can say that in the backward direction, the random walk “knows” how to concentrate probability back into regions from which it had been dispersing forward.</p>
+</li>
+</ul>
+<p>This completes the derivation (sometimes known as <em>Anderson’s theorem</em>).</p>
+<p><strong>Understanding the Fokker–Planck Equation: A Gentle Introduction</strong> In many physical, biological, and financial systems, we are often interested not only in the behavior of individual particles or agents but also in how <em>probability distributions</em> evolve over time. If you have ever encountered a situation where randomness (noise) and drift (directed motion) both play roles in the dynamics, you have likely brushed up against the <em>Fokker–Planck equation (FP equation)</em>.
+In this blog, we will explore:</p>
+<ol>
+<li>
+<p><strong>What the Fokker–Planck equation is.</strong></p>
+</li>
+<li>
+<p><strong>When and why the probability density follows it.</strong></p>
+</li>
+<li>
+<p><strong>An intuitive explanation to help you understand it deeply.</strong></p>
+</li>
+</ol>
+<h2 id="3-stochastic-differential-equation-sde-for-ddpm">3. Stochastic Differential Equation (SDE) for DDPM<a class="headerlink" href="#3-stochastic-differential-equation-sde-for-ddpm" title="Permanent link">¶</a></h2>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="https://miro.medium.com/v2/resize:fit:1400/1*U8SkhCM0--RSXPrVQXHAlw.png" data-desc-position="bottom"><img alt="" src="https://miro.medium.com/v2/resize:fit:1400/1*U8SkhCM0--RSXPrVQXHAlw.png"></a>
+Denoising Diffusion Probabilistic Models (DDPMs) are generative models that progressively add noise to data in a forward process, and then learn to invert this process to generate new data samples from noise. In the original DDPM (Ho et al., 2020), the forward diffusion is discrete, applying noise in <span class="arithmatex">\(N\)</span> steps until data become (approximately) Gaussian. The reverse process is also defined discretely, denoising step by step.
+Recent perspectives (Song et al., 2021) have shown that we can view diffusion models in <em>continuous time</em>, describing them via SDEs. This text shows how the discrete forward process in DDPM converges to a continuous SDE when we let the number of steps <span class="arithmatex">\(N \to \infty\)</span>, and how the corresponding reverse SDE aligns with the DDPM reverse noising formula.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*1tEmQCVNfWvMg_E0c8Zblw.png" data-desc-position="bottom"><img alt="" src="https://miro.medium.com/v2/resize:fit:2000/format:webp/1*1tEmQCVNfWvMg_E0c8Zblw.png"></a></p>
+<p>In the following sections, let's derivate the continous format of diffusion process by taking the timestep to limit 0.</p>
+<h3 id="31-discrete-forward-process-in-ddpm">3.1 Discrete Forward Process in DDPM<a class="headerlink" href="#31-discrete-forward-process-in-ddpm" title="Permanent link">¶</a></h3>
+<p>In the standard (discrete) DDPM, each forward step is:</p>
+<div class="arithmatex">\[
+ x_i \;=\; \sqrt{1 - \beta_i}\, x_{i-1} \;+\; \sqrt{\beta_i}\,\epsilon_i,
+\quad
+\epsilon_i \sim \mathcal{N}(0, I),
+\quad i=1,\dots,N.
+\]</div>
+<ul>
+<li>
+<p><span class="arithmatex">\(\beta_i \in [0,1]\)</span> is the noise intensity at step <span class="arithmatex">\(i\)</span>.</p>
+</li>
+<li>
+<p><span class="arithmatex">\(x_0\)</span> is sampled from the real data distribution <span class="arithmatex">\(p_{\mathrm{data}}\)</span>.</p>
+</li>
+<li>
+<p>After <span class="arithmatex">\(N\)</span> steps, <span class="arithmatex">\(x_N\)</span> is (approximately) Gaussian.
+Often, <span class="arithmatex">\(\beta_i\)</span> is chosen according to a schedule (e.g. linear, cosine) from a small value to a moderately larger one. Even if some <span class="arithmatex">\(\beta_i\)</span> are not <em>very</em> small, we can view each step as adding Gaussian noise to the current sample.</p>
+</li>
+</ul>
+<h3 id="32-splitting-large-steps-via-gaussian-additivity">3.2 Splitting Large Steps via Gaussian Additivity<a class="headerlink" href="#32-splitting-large-steps-via-gaussian-additivity" title="Permanent link">¶</a></h3>
+<p>A key observation is that a single “large step” of Gaussian noise can be <em>split</em> into many smaller Gaussian increments without changing the <strong>final distribution</strong> . Formally, if</p>
+<p>$$
+ x_{i}
+\;=\; \sqrt{1-\beta_i}\,x_{i-1} \;+\; \sqrt{\beta_i}\,\epsilon_i,
+$$
+we can represent <span class="arithmatex">\(\epsilon_i\)</span> as the sum of <span class="arithmatex">\(M\)</span> smaller Gaussians of variance <span class="arithmatex">\(\beta_i/M\)</span>. In other words, we can rewrite that same update with <span class="arithmatex">\(M\)</span> micro-steps, each of which has variance <span class="arithmatex">\(\beta_i/M\)</span>. Because Gaussians are closed under convolution, <span class="arithmatex">\(M\)</span> small steps or <span class="arithmatex">\(1\)</span> big step produce the <em>same</em> marginal distribution for <span class="arithmatex">\(x_i\)</span>.
+When <span class="arithmatex">\(M \to \infty\)</span>, each micro-step becomes infinitesimally small. Hence, we can imagine the entire forward diffusion as a limit of infinitely many tiny Gaussian increments. This viewpoint paves the way to interpret the forward process as a stochastic differential equation.</p>
+<p>In other point of view, since we want to get the continuous format by taking the <span class="arithmatex">\(N\)</span> tends to infinity, corresponds the increment of <span class="arithmatex">\(x_t\)</span> be infenitesimal, which also requires that <span class="arithmatex">\(\beta_i \to 0\)</span>. In this sense, we have enough confidence to assume that</p>
+<div class="arithmatex">\[\tag{1}\boxed{\beta_i = \beta(t_i)\Delta t},\quad \beta(x): X \to \mathbb{R^+}\]</div>
+<h3 id="33-from-discrete-updates-to-a-continuous-sde">3.3 From Discrete Updates to a Continuous SDE<a class="headerlink" href="#33-from-discrete-updates-to-a-continuous-sde" title="Permanent link">¶</a></h3>
+<h4 id="331-mapping-steps-to-time">3.3.1 Mapping Steps to Time<a class="headerlink" href="#331-mapping-steps-to-time" title="Permanent link">¶</a></h4>
+<p>Let the total diffusion run over time <span class="arithmatex">\(t \in [0,1]\)</span>, with discrete steps <span class="arithmatex">\(t_i = i/N\)</span>. Denote <span class="arithmatex">\(\Delta t = 1/N\)</span></p>
+<h4 id="332-taylor-expansion-argument">3.3.2 Taylor Expansion Argument<a class="headerlink" href="#332-taylor-expansion-argument" title="Permanent link">¶</a></h4>
+<p>Consider one discrete step:</p>
+<div class="arithmatex">\[
+x_{i}=\sqrt{1-\beta_i}\,x_{i-1} \;+\; \sqrt{\beta_i}\,\epsilon_i.
+\]</div>
+<p>If <span class="arithmatex">\(\beta_i\)</span> is small, we use a first-order expansion:</p>
+<div class="arithmatex">\[
+ \sqrt{1-\beta_i}
+\;\approx\;
+1 \;-\; \tfrac12\,\beta_i.
+\]</div>
+<p>Then</p>
+<div class="arithmatex">\[
+x_i - x_{i-1}\;\approx\;-\tfrac12\,\beta_i\,x_{i-1}\;+\; \sqrt{\beta_i}\,\epsilon_i.
+\]</div>
+<p>Suppose <span class="arithmatex">\(x_i = x_{t+\Delta t}\)</span> and <span class="arithmatex">\(x_{i-1}= x_{t}\)</span>,
+Hence</p>
+<div class="arithmatex">\[
+\begin{aligned}
+x_{t + \Delta t}  - x_{t} &amp;= -\frac{1}{2} \beta (t + \Delta t) \Delta t x_{t} + \sqrt{\beta(t+\Delta t)\Delta t}\epsilon_t\\
+&amp;\approx  -\frac{1}{2} \beta (t ) \Delta t x_{t} + \sqrt{\beta(t)\Delta t}\epsilon_t \\
+&amp; = -\frac{1}{2} \beta (t ) x_{t} \Delta t + \sqrt{\beta(t)} \Delta t \epsilon_t \\
+&amp; = -\frac{1}{2} \beta (t ) x_{t} \Delta t + \sqrt{\beta(t)} \big(W(t+\Delta t)- W(t) \big)\\
+&amp; = -\frac{1}{2} \beta (t ) x_{t} \Delta t + \sqrt{\beta(t)} dW
+\end{aligned}
+\]</div>
+<p>Note that</p>
+<div class="arithmatex">\[
+W(t + \Delta t) - W(t) \sim \mathcal{N}(0, \Delta t).
+\]</div>
+<p>Thus in the limit we get the SDE:</p>
+<div class="arithmatex">\[
+d x = -\tfrac12\,\beta(t)\,x\,dt \;+\; \sqrt{\beta(t)}\,dw
+\]</div>
+<p>This is often referred to as the <strong>Variance Preserving SDE (VP-SDE)</strong>  in the score-based literature.</p>
+<h4 id="333-splitting-steps-argument">3.3.3 Splitting Steps Argument<a class="headerlink" href="#333-splitting-steps-argument" title="Permanent link">¶</a></h4>
+<p>Alternatively, if <span class="arithmatex">\(\beta_i\)</span> is not initially small, we can split each “big step” into <span class="arithmatex">\(M\)</span> micro-steps of size <span class="arithmatex">\(\beta_i/M\)</span>. If we then let <span class="arithmatex">\(N \to \infty\)</span> and <span class="arithmatex">\(M \to \infty\)</span>, so that <span class="arithmatex">\(\beta_i/M \to 0\)</span>, the entire chain of <span class="arithmatex">\(N\times M\)</span> micro-steps again converges to the same SDE. Both methods lead to the conclusion:</p>
+<div class="arithmatex">\[
+ \boxed{
+\text{Forward SDE: }
+dx = -\tfrac12\,\beta(t)\,x\,dt \;+\; \sqrt{\beta(t)}\,dw.
+}
+\]</div>
+<h4 id="334-the-reverse-sde">3.3.4 The Reverse SDE<a class="headerlink" href="#334-the-reverse-sde" title="Permanent link">¶</a></h4>
+<p>Given a forward SDE of the form:</p>
+<div class="arithmatex">\[
+ dx = f(x,t)\,dt \;+\; g(t)\,dw,
+\]</div>
+<p>the corresponding <em>reverse-time</em> SDE is derived by Anderson (1982) and extended by Song et al. (2021):</p>
+<div class="arithmatex">\[
+d\tilde{x}=\bigl[f(\tilde{x}, t) \;-\; g(t)^2\,\nabla_{\tilde{x}}\log p_t(\tilde{x})\bigr]\;dt \;+\; g(t)\,d\tilde{w},
+\]</div>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(\tilde{w}\)</span> represents a Brownian motion in reverse time</li>
+<li><span class="arithmatex">\(\nabla_{\tilde{x}}\log p_t(\tilde{x})\)</span> is the <em>score</em> function (gradient of the log density) at time <span class="arithmatex">\(t\)</span></li>
+</ul>
+<p>For our specific case where <span class="arithmatex">\(f(x,t) = -\frac{1}{2}\beta(t)x\)</span> and <span class="arithmatex">\(g(t)=\sqrt{\beta(t)}\)</span>, the reverse SDE takes the form:</p>
+<div class="arithmatex">\[
+d\tilde{x}(t)= - \bigl[\tfrac12\,\beta(t)\,\tilde{x}+\beta(t)\,\nabla_{\tilde{x}}\log p_t(\tilde{x})\bigr]\;dt \;+\;\sqrt{\beta(t)}\,d\tilde{w}.
+\]</div>
+<h4 id="335-consistency-with-ddpms-reverse">3.3.5 Consistency with DDPM’s Reverse<a class="headerlink" href="#335-consistency-with-ddpms-reverse" title="Permanent link">¶</a></h4>
+<div class="admonition note">
+<p>Here we can derivate the reserve formula from the DDPM reverse discrete steps by taking into infinitesimal  timestep, which should be matched with the above formula which derivated from FPE.</p>
+</div>
+<p>Review the reserve step in DDPM</p>
+<div class="arithmatex">\[\tag{5}\boxed{
+x_{t-1} = \frac{1}{\sqrt{1-\beta_t}}\left(x_t - \frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\,\epsilon_\theta(x_t,t)\right) + \sqrt{\tilde{\beta}_t}\,z,\quad z\sim\mathcal{N}(0,I)}
+\]</div>
+<p>Recall that in the DDPM reverse process the update (when the network predicts the noise <span class="arithmatex">\(\epsilon_\theta\)</span>) is given by</p>
+<div class="arithmatex">\[
+ x_{t-1} = \frac{1}{\sqrt{1-\beta_t}}\left(x_t - \frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\,\epsilon_\theta(x_t,t)\right) + \sqrt{\tilde{\beta}_t}\,z,\quad z\sim \mathcal{N}(0,I),
+\]</div>
+<p>with
+$$
+ \bar{\alpha}<em s="1">t = \prod</em>}^t (1-\beta_s),\qquad \tilde{\beta<em t-1="t-1">t = \frac{1-\bar{\alpha}</em>\,\beta_t.
+$$}}{1-\bar{\alpha}_t</p>
+<p>When the number of steps is large, one may view each update as occurring over a small time interval. In what follows we will reparameterize the discrete index in terms of a small time increment.</p>
+<p>Suppose that in the original (forward) time variable <span class="arithmatex">\(t\)</span> we write the update from <span class="arithmatex">\(t\)</span> to <span class="arithmatex">\(t-\Delta t\)</span> as</p>
+<div class="arithmatex">\[
+ x(t-\Delta t) = \frac{1}{\sqrt{1-\beta(t)\,\Delta t}}\left(x(t) - \frac{\beta(t)\,\Delta t}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x(t),t)\right) + \sqrt{\tilde{\beta}(t)\,\Delta t}\,z.
+\]</div>
+<p>For a small time interval, we assume the noise variance scales as <span class="arithmatex">\(\beta(t)\,\Delta t\)</span>. Similarly, <span class="arithmatex">\(\tilde{\beta}(t)\,\Delta t\)</span> represents the variance used in the reverse update. Note that in the continuous limit, we typically find that <span class="arithmatex">\(\tilde{\beta}(t)\)</span> converges to <span class="arithmatex">\(\beta(t)\)</span>.</p>
+<p>Expanding to first order in <span class="arithmatex">\(\Delta t\)</span> gives</p>
+<div class="arithmatex">\[
+\begin{aligned}
+x(t-\Delta t) &amp;\approx \Bigl(1+\tfrac{1}{2}\beta(t)\Delta t\Bigr)\left(x(t) - \frac{\beta(t)\Delta t}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x(t),t)\right) + \sqrt{\tilde{\beta}(t)\Delta t}\,z\\
+&amp;\approx x(t) - \frac{\beta(t)\,\Delta t}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x(t),t)+ \frac{1}{2}\beta(t)x(t)\,\Delta t+ \sqrt{\tilde{\beta}(t)\Delta t}\,z.
+\end{aligned}
+\]</div>
+<p>That is, the increment in the original (forward) time is</p>
+<div class="arithmatex">\[-\Delta x = x(t-\Delta t)-x(t) = \left[\frac{1}{2}\beta(t)x(t)-\frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x(t),t)\right]\Delta t + \sqrt{\tilde{\beta}(t)\,\Delta t}\,z.
+\]</div>
+<p>In the continuous limit, <span class="arithmatex">\(\sqrt{\Delta t}\,z\)</span> becomes the differential <span class="arithmatex">\(dW\)</span> of a standard Wiener process.</p>
+<div class="arithmatex">\[
+ \text{d} x
+=- \left[\frac{1}{2}\beta(t)\,x(t)
+-\frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta\Bigl(x(t),\,t)\Bigr)
+\right]dt - \sqrt{\beta(t))}\,dW.
+\]</div>
+<p>To complete our analysis of the reverse process, let's introduce a time change:</p>
+<p>Let <span class="arithmatex">\(\tau = T - t\)</span> and <span class="arithmatex">\(\tilde{x}(\tau) = x(T-\tau)\)</span></p>
+<p>Under this transformation:</p>
+<ul>
+<li><span class="arithmatex">\(d\tau = -dt\)</span> (time reversal)</li>
+<li><span class="arithmatex">\(d\tilde{x} = -dx\)</span> (process reversal)</li>
+</ul>
+<p>This leads to:</p>
+<div class="arithmatex">\[
+ \text{d} \tilde{x}
+=- \left[\frac{1}{2}\beta(T-\tau)\,\tilde{x}(\tau)
+-\frac{\beta(T-\tau)}{\sqrt{1-\bar{\alpha}(T-\tau)}}\,\epsilon_\theta\Bigl(\tilde{x}(\tau),\,T-\tau\Bigr)
+\right]\tau + \sqrt{\beta(T-\tau)}\,dW.
+\]</div>
+<p>This derivation shows how one may obtain a continuous-time (SDE) formulation of the DDPM reverse process with an explicit reversed time mapping.</p>
+<p>Recall the formula from the reverse‐time dynamics,</p>
+<div class="arithmatex">\[
+ dx = \Bigl[-\frac{1}{2}\beta(t)x - \beta(t)\,\nabla_x\log p_t(x)\Bigr]dt + \sqrt{\beta(t)}\,d\bar{w}.
+\]</div>
+<p>Use the estimator of the gradient from learning</p>
+<div class="arithmatex">\[
+ \nabla_x\log p_t(x) \approx -\frac{1}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x,t),
+\]</div>
+<p>We got</p>
+<div class="arithmatex">\[
+dx = \left[-\frac{1}{2}\beta(t)x + \frac{\beta(t)}{\sqrt{1-\bar{\alpha}(t)}}\,\epsilon_\theta(x,t)\right]dt + \sqrt{\beta(t)}\,d\bar{w}.
+\]</div>
+<h2 id="4-summary-of-correspondence">4. Summary of Correspondence<a class="headerlink" href="#4-summary-of-correspondence" title="Permanent link">¶</a></h2>
+<p>In the continuous format, we name it as <mark>VP-SDE</mark>, refer <a href="../score_based_sde/">score based SDE</a> for more details.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>VP-SDE (Continuous)</th>
+<th>DDPM (Discrete)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(x_t\)</span></td>
+<td><span class="arithmatex">\(x_t = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t} \epsilon\)</span></td>
+<td><span class="arithmatex">\(x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\alpha_t\)</span></td>
+<td><span class="arithmatex">\(\alpha_t = e^{-\int_0^t \beta(s) ds}\)</span></td>
+<td><span class="arithmatex">\(\bar{\alpha}_t = \prod_{s=1}^{t} (1 - \beta_s)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\beta_t\)</span></td>
+<td><span class="arithmatex">\(\beta_t^{\text{VP-SDE}} = d(-\log \alpha_t) / dt\)</span></td>
+<td><span class="arithmatex">\(\beta_t^{\text{DDPM}} \approx \beta_t^{\text{VP-SDE}} \Delta t\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\sigma_t\)</span></td>
+<td><span class="arithmatex">\(\sigma_t =\sqrt{ 1 - \alpha_t}\)</span></td>
+<td><span class="arithmatex">\(\sigma_t =\sqrt{1 - \bar{\alpha}_t}\)</span></td>
+</tr>
+<tr>
+<td>forward</td>
+<td><span class="arithmatex">\(dx = -\frac{1}{2} \beta(t) x dt + \sqrt{\beta(t)} dw\)</span></td>
+<td><span class="arithmatex">\(x_t = \sqrt{1 - \beta_t} x_{t-1} + \sqrt{\beta_t} \epsilon\)</span></td>
+</tr>
+<tr>
+<td>backward</td>
+<td><span class="arithmatex">\(dx = -\frac{1}{2} \beta(t) \left(  x + 2 s_\theta(x, t) \right) dt + \sqrt{\beta(t)} dw\)</span></td>
+<td><span class="arithmatex">\(x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \epsilon_\theta(x_t, t) \right) + \sigma_t z\)</span></td>
+</tr>
+<tr>
+<td>Flow ODE</td>
+<td><span class="arithmatex">\(dx = - \frac{1}{2} \beta(t)\left( x + s_\theta(x, t) \right) dt\)</span></td>
+<td>Na</td>
+</tr>
+<tr>
+<td>loss</td>
+<td><span class="arithmatex">\(\mathbb{E}_{t, x_0, \epsilon} \left[ \lambda_t \|s_\theta(x_t, t) + \frac{\epsilon_\theta(x,t)}{\sqrt{1-\alpha_t}} \|^2 \right] \)</span></td>
+<td><span class="arithmatex">\(\mathbb{E}_{t,x_0,\epsilon} \left[\| \epsilon_\theta(x,t) - \epsilon\|^2\right] \)</span></td>
+</tr>
+<tr>
+<td>score function</td>
+<td><span class="arithmatex">\(-\frac{\epsilon}{\sqrt{1-\alpha_t}}\)</span></td>
+<td></td>
+</tr>
+<tr>
+<td>Reverse Sampling</td>
+<td><span class="arithmatex">\(x_{t-1} =x_{t} +\frac{1}{2} \beta(t) \left(  x + 2 s_\theta(x, t) \right) dt - \sqrt{\beta(t)} dw\)</span> or <span class="arithmatex">\(x_{t-1} =x_{t} +\frac{1}{2} \beta(t) \left(  x +  s_\theta(x, t) \right) dt\)</span></td>
+<td><span class="arithmatex">\(x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \epsilon_\theta(x_t, t) \right) + \sigma_t z\)</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-network-output-noise-prediction-vs-score">5. Network Output: Noise Prediction vs. Score<a class="headerlink" href="#5-network-output-noise-prediction-vs-score" title="Permanent link">¶</a></h2>
+<p>In practice, DDPM commonly trains a network to predict the added noise <span class="arithmatex">\(\epsilon\)</span> rather than directly predicting <span class="arithmatex">\(\nabla_x \log p(x_t)\)</span> for better stability or convergence rage. However, there is a <strong>simple linear relation</strong>  between <span class="arithmatex">\(\epsilon\)</span> and the score. Therefore:</p>
+<ol>
+<li>
+<p><strong>Predicting noise</strong>  and <strong>predicting the score</strong>  are <em>equivalent</em> in mathematical terms.</p>
+</li>
+<li>
+<p>Score-based SDE models often produce <span class="arithmatex">\(\mathbf{s}_\theta(x,t) \approx \nabla_x \log p_t(x)\)</span>.</p>
+</li>
+<li>
+<p>DDPM-like models produce <span class="arithmatex">\(\epsilon_\theta(x_t,t)\)</span>, from which the score can be derived.</p>
+</li>
+</ol>
+<p>Either way, we get a functional approximation to the same “denoising direction” that enables the reverse-time generative process.</p>
+<p><strong>Extenstion of the prediction types of diffusion model</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>Diffusion Target</strong></th>
+<th><strong>Definition</strong></th>
+<th><strong>Formula</strong></th>
+<th><strong>Loss Function</strong></th>
+<th><strong>Pros</strong></th>
+<th><strong>Common Use Cases</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><span class="arithmatex">\( \epsilon \)</span>-Prediction (Noise Prediction)</strong></td>
+<td>Predicts the added noise.</td>
+<td><span class="arithmatex">\( \epsilon_\theta(x_t, t) \approx \epsilon \)</span></td>
+<td><span class="arithmatex">\( \mathbb{E} [ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 ] \)</span></td>
+<td>Standard DDPM target, works well in pixel space.</td>
+<td>Classical DDPMs (e.g., OpenAI DDPM, ADM)</td>
+</tr>
+<tr>
+<td><strong><span class="arithmatex">\( x_0 \)</span>-Prediction (Data Prediction)</strong></td>
+<td>Predicts the clean image directly.</td>
+<td><span class="arithmatex">\( x_{0_\theta}(x_t, t) \approx x_0 \)</span></td>
+<td><span class="arithmatex">\( \mathbb{E} [ \| x_0 - x_{0_\theta}(x_t, t) \|^2 ] \)</span></td>
+<td>Directly generates the final image.</td>
+<td>Consistency Models, improved diffusion models</td>
+</tr>
+<tr>
+<td><strong><span class="arithmatex">\( v \)</span>-Prediction (Velocity Prediction)</strong></td>
+<td>Predicts a combination of noise and clean data.</td>
+<td><span class="arithmatex">\( v_\theta(x_t, t) = \alpha_t \epsilon - \sigma_t x_0 \)</span></td>
+<td><span class="arithmatex">\( \mathbb{E} [ \| v - v_\theta(x_t, t) \|^2 ] \)</span></td>
+<td>More stable training, better for latent diffusion.</td>
+<td>Stable Diffusion, Latent Diffusion Models</td>
+</tr>
+<tr>
+<td><strong><span class="arithmatex">\( \Sigma \)</span>-Prediction (Variance Prediction)</strong></td>
+<td>Predicts the variance of the noise.</td>
+<td><span class="arithmatex">\(p_\theta(x_{t-1} \| x_t) = \mathcal{N}(\mu_\theta, \Sigma_\theta)\)</span></td>
+<td><span class="arithmatex">\( \mathbb{E} [ \| \epsilon - \epsilon_\theta \|^2 + w(t) \cdot \text{KL}(\Sigma_\theta) ] \)</span></td>
+<td>Better uncertainty estimation, prevents variance explosion.</td>
+<td>Class-conditional DDPMs (ADM), Stable Diffusion</td>
+</tr>
+<tr>
+<td><strong><span class="arithmatex">\( s \)</span>-Prediction (Score Function Prediction)</strong></td>
+<td>Predicts the score function instead of noise.</td>
+<td><span class="arithmatex">\( s_\theta(x_t, t) = -\nabla_{x_t} \log p_t(x_t) \)</span></td>
+<td><span class="arithmatex">\( \mathbb{E} [ \| s_\theta - \nabla_{x_t} \log p_t(x_t) \|^2 ] \)</span></td>
+<td>Works well in continuous-time diffusion models.</td>
+<td>Score-Based Models (SGM), Continuous-Time Diffusion Models</td>
+</tr>
+<tr>
+<td><strong>EBM-Prediction (Energy-Based Model)</strong></td>
+<td>Learns an energy function.</td>
+<td><span class="arithmatex">\( \frac{\partial x}{\partial t} = -\nabla_x E_\theta(x, t) + \sigma \xi_t \)</span></td>
+<td>N/A (Energy-Based Loss)</td>
+<td>Unifies score-based and energy-based models.</td>
+<td>Diffusion-EBMs</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Takeaways</strong></p>
+<ul>
+<li>Most standard diffusion models use <strong><span class="arithmatex">\( \epsilon \)</span>-prediction</strong>.</li>
+<li><strong><span class="arithmatex">\( v \)</span>-prediction</strong> improves stability and is common in <strong>latent diffusion</strong>.</li>
+<li><strong><span class="arithmatex">\( \Sigma \)</span>-prediction</strong> adds variance modeling for better flexibility.</li>
+<li><strong>Score-based prediction</strong> is used in <strong>continuous-time models</strong>.</li>
+<li><strong>EBMs</strong> provide an alternative <strong>energy-based formulation</strong>.</li>
+</ul>
+<h2 id="6-appendix">6. Appendix<a class="headerlink" href="#6-appendix" title="Permanent link">¶</a></h2>
+<h3 id="61-what-is-the-fokkerplanck-equation">6.1 What is the Fokker–Planck Equation?<a class="headerlink" href="#61-what-is-the-fokkerplanck-equation" title="Permanent link">¶</a></h3>
+<p>Put simply, the Fokker–Planck equation describes how the <em>probability density function</em> (PDF) of a stochastic (random) process evolves over time. More formally, if we let <span class="arithmatex">\(p(x,t)\)</span> be the probability density of finding the system in state <span class="arithmatex">\(x\)</span> at time <span class="arithmatex">\(t\)</span>, the Fokker–Planck equation reads:</p>
+<div class="arithmatex">\[
+\frac{\partial p(x,t)}{\partial t} =  \left\lbrace -\frac{\partial}{\partial x} \left[ \mu(x)p(x,t)\right] + \frac{1}{2}\,\frac{\partial^2}{\partial x^2}(\,D(x)\,p(x,t))\right\rbrace
+\]</div>
+<p>where</p>
+<ul>
+<li>
+<p><strong><span class="arithmatex">\(\mu(x)\)</span></strong>  represents the deterministic drift or “drift velocity”. It reflects the average effect of an external force acting on the system.</p>
+</li>
+<li>
+<p><strong><span class="arithmatex">\(D(x)\)</span></strong>  represents the <em>diffusion</em> (random fluctuations) at state <span class="arithmatex">\(x\)</span>.</p>
+</li>
+</ul>
+<p>For simplicity, we often see the equation in the case of constant diffusion <span class="arithmatex">\(D\)</span> and constant drift <span class="arithmatex">\(v\)</span>:
+$$
+ \frac{\partial p(x,t)}{\partial t} = -v\,\frac{\partial p(x,t)}{\partial x} + \frac{D}{2}\,\frac{\partial^2 p(x,t)}{\partial x^2}.
+$$</p>
+<p>This partial differential equation tells us how the probability density changes because of both deterministic drift (<span class="arithmatex">\(v\)</span>) and random diffusion (<span class="arithmatex">\(D\)</span>).</p>
+<hr>
+<h3 id="62-when-does-the-probability-follow-the-fokkerplanck-equation">6.2 When Does the Probability Follow the Fokker–Planck Equation?<a class="headerlink" href="#62-when-does-the-probability-follow-the-fokkerplanck-equation" title="Permanent link">¶</a></h3>
+<p>The Fokker–Planck equation is typically valid under these conditions:</p>
+<ol>
+<li>
+<p><strong>Continuous Markov processes in one dimension (or higher).</strong></p>
+</li>
+<li>
+<p>The process must be <em>Markovian</em>: the future depends only on the present state, not on the history.</p>
+</li>
+<li>
+<p><strong>Stochastic differential equations (SDEs) of the form</strong></p>
+<div class="arithmatex">\[
+dX_t = \mu(X_t)\,dt + \sqrt{D(X_t)}\,dW_t,
+\]</div>
+<ul>
+<li>where <span class="arithmatex">\(W_t\)</span> is a standard Brownian motion (Wiener process).</li>
+</ul>
+</li>
+<li>
+<p><strong>Small, Gaussian-like noise.</strong></p>
+</li>
+<li>
+<p>The derivation of the Fokker–Planck relies on the assumption that increments of noise are small over short intervals (leading to the second-order derivative term in the FP equation).</p>
+</li>
+<li>
+<p><strong>No long-range jumps (no Lévy flights).</strong></p>
+</li>
+<li>
+<p>If jumps or large discontinuous moves exist, then we would use <em>generalized</em> kinetic equations (like fractional Fokker–Planck or Master equations) rather than the classical FP equation.
+   In essence, if your system follows an Itô-type (or Stratonovich-type) SDE with drift <span class="arithmatex">\(\mu\)</span> and diffusion coefficient <span class="arithmatex">\(D\)</span>, then the <em>probability density</em> of where that system might be at time <span class="arithmatex">\(t\)</span> will satisfy the Fokker–Planck equation.</p>
+</li>
+</ol>
+<h3 id="63-intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation">6.3 Intuitive Interpretation of Drift and Diffusion in the Fokker–Planck Equation<a class="headerlink" href="#63-intuitive-interpretation-of-drift-and-diffusion-in-the-fokkerplanck-equation" title="Permanent link">¶</a></h3>
+<p>The Fokker–Planck equation is a powerful tool for describing how probability densities evolve over time. In many fields—such as physics, biology, and finance—it is used to capture the interplay between deterministic forces and random fluctuations. This blog post provides an intuitive explanation of the two key components: <strong>drift</strong>  and <strong>diffusion</strong> .</p>
+<h4 id="631-drift-the-deterministic-push">6.3.1 Drift: The Deterministic Push<a class="headerlink" href="#631-drift-the-deterministic-push" title="Permanent link">¶</a></h4>
+<p>In the one-dimensional Fokker–Planck equation, the drift term is commonly written as:</p>
+<div class="arithmatex">\[
+ -\frac{\partial}{\partial x}\Big[A(x)P(x,t)\Big]
+\]</div>
+<p>Here,</p>
+<ul>
+<li>
+<p><strong><span class="arithmatex">\(A(x)\)</span></strong>  represents the deterministic drift or “drift velocity”. It reflects the average effect of an external force acting on the system.</p>
+</li>
+<li>
+<p><strong><span class="arithmatex">\(P(x,t)\)</span></strong>  is the probability density at position <span class="arithmatex">\(x\)</span> and time <span class="arithmatex">\(t\)</span>.</p>
+</li>
+<li>
+<p>The product <strong>The product <span class="arithmatex">\(A(x)P(x,t)\)</span></strong>  represents the probability flux resulting from the deterministic motion.</p>
+</li>
+</ul>
+<p>Imagine particles moving under the influence of an external force:</p>
+<ul>
+<li>
+<p><strong>Probability Flow:</strong>
+The term <span class="arithmatex">\(A(x)P(x,t)\)</span> can be thought of as the flow of particles moving with velocity <span class="arithmatex">\(A(x)\)</span>. This is similar to how a group of people might move along a corridor when prompted by a guiding signal.</p>
+</li>
+<li>
+<p><strong>Divergence and Local Density Change:</strong>
+The spatial derivative <span class="arithmatex">\(\frac{\partial}{\partial x}[A(x)P(x,t)]\)</span> measures how the flow changes along the <span class="arithmatex">\(x\)</span>-direction (its divergence).</p>
+</li>
+<li>
+<p>If the divergence is <strong>positive</strong>  at a point, more particles are leaving that region than entering it. Because of the negative sign in the equation, this results in a decrease in the probability density (<span class="arithmatex">\(\frac{\partial P}{\partial t} &lt; 0\)</span>).</p>
+</li>
+<li>
+<p>Conversely, if the divergence is <strong>negative</strong> , particles are converging at that point, leading to an increase in the local density (<span class="arithmatex">\(\frac{\partial P}{\partial t} &gt; 0\)</span>).</p>
+</li>
+</ul>
+<p>This formulation captures how deterministic forces cause a net flow of probability, thereby modifying the local density.</p>
+<h4 id="632-diffusion-the-smoothing-effect-of-random-perturbations">6.3.2 Diffusion: The Smoothing Effect of Random Perturbations<a class="headerlink" href="#632-diffusion-the-smoothing-effect-of-random-perturbations" title="Permanent link">¶</a></h4>
+<p>The diffusion term in the Fokker–Planck equation is typically expressed as:
+$$
+ \frac{1}{2}\frac{\partial^2}{\partial x^2}\Big[B(x)P(x,t)\Big]
+$$</p>
+<p>Here,</p>
+<ul>
+<li>
+<p><strong><span class="arithmatex">\(B(x)\)</span></strong>  is the diffusion coefficient, indicating the strength of random fluctuations.</p>
+</li>
+<li>
+<p>The second derivative <span class="arithmatex">\(\frac{\partial^2}{\partial x^2}\)</span> reflects the curvature of the probability density, indicating how "peaked" or "spread out" the distribution is locally.</p>
+</li>
+</ul>
+<p>Diffusion describes how random perturbations work to smooth out irregularities in the probability distribution:</p>
+<ul>
+<li>
+<p><strong>High-Density Regions (Peaks):</strong>
+At locations where <span class="arithmatex">\(P(x,t)\)</span> forms a peak, the distribution is concave down (negative curvature). The diffusion term acts to reduce the density at these peaks, causing the probability to spread out.</p>
+</li>
+<li>
+<p><strong>Low-Density Regions (Valleys):</strong>
+In contrast, in regions where the density is low and the distribution is convex (positive curvature), diffusion causes the density to increase by “filling in” these valleys with probability from neighboring regions.</p>
+</li>
+</ul>
+<p>This effect is analogous to a drop of ink spreading on paper: the concentrated ink in the center disperses outward, leading to a more uniform concentration over time. Diffusion thus does not simply lower the density everywhere; rather, it redistributes it, diminishing local extremes to create a smoother overall profile.</p>
+<hr>
+<h5 id="6321-drift-and-diffusion-combined-evolution-of-the-probability-density">6.3.2.1 Drift and Diffusion: Combined Evolution of the Probability Density<a class="headerlink" href="#6321-drift-and-diffusion-combined-evolution-of-the-probability-density" title="Permanent link">¶</a></h5>
+<p>In the Fokker–Planck equation, drift and diffusion work together to dictate how the probability density evolves:</p>
+<ul>
+<li>
+<p><strong>Drift</strong>  accounts for the systematic, directional movement driven by deterministic forces. It creates flows that can either concentrate or deplete the density depending on the spatial gradient (divergence) of the flux.</p>
+</li>
+<li>
+<p><strong>Diffusion</strong>  represents the effect of random fluctuations, working to smooth out the probability distribution. It reduces sharp peaks and fills in dips, leading to a more even spread of the density.</p>
+</li>
+</ul>
+<p>Together, these processes explain how the overall distribution changes over time, even if the motion of individual particles is unpredictable. By considering both the directional push of drift and the smoothing influence of diffusion, the Fokker–Planck equation provides a comprehensive framework for understanding the evolution of complex systems under uncertainty.</p>
+<p>In the Fokker–Planck equation, drift and diffusion work together to dictate how the probability density evolves:</p>
+<ul>
+<li>
+<p><strong>Drift</strong>  accounts for the systematic, directional movement driven by deterministic forces. It creates flows that can either concentrate or deplete the density depending on the spatial gradient (divergence) of the flux.</p>
+</li>
+<li>
+<p><strong>Diffusion</strong>  represents the effect of random fluctuations, working to smooth out the probability distribution. It reduces sharp peaks and fills in dips, leading to a more even spread of the density.</p>
+</li>
+</ul>
+<p>Together, these processes explain how the overall distribution changes over time, even if the motion of individual particles is unpredictable. By considering both the directional push of drift and the smoothing influence of diffusion, the Fokker–Planck equation provides a comprehensive framework for understanding the evolution of complex systems under uncertainty.</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/json" class="js-hypothesis-config">
+{
+  "openSidebar": false,
+  "showHighlights": true,
+  "theme": "clean"
+}
+</script>
+<script async src="https://hypothes.is/embed.js"></script>
+
+<!-- Hypothesis 样式美化 -->
+<style>
+  /* 修改高亮效果为下划线和聊天泡泡 */
+  .hypothesis-highlight {
+    background-color: transparent !important; /* 移除高亮背景 */
+    text-decoration: underline !important;
+    text-decoration-color: #4285f4 !important;
+    text-decoration-thickness: 2px !important;
+    text-decoration-style: wavy !important;
+    position: relative !important;
+    cursor: pointer !important;
+    border-bottom: none !important; /* 移除之前的边框 */
+    box-shadow: none !important; /* 移除之前的阴影 */
+  }
+
+  .hypothesis-highlight::after {
+    content: "💬" !important;
+    position: absolute !important;
+    display: inline-block !important;
+    font-size: 14px !important;
+    top: -10px !important;
+    right: -5px !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
+  .hypothesis-highlight:hover {
+    background-color: rgba(66, 133, 244, 0.08) !important; /* 鼠标悬停时的轻微背景 */
+  }
+
+  .hypothesis-highlight:hover::after {
+    opacity: 1 !important;
+    transform: scale(1.2) !important;
+  }
+
+  /* 美化 Hypothesis 侧边栏 */
+  hypothesis-sidebar {
+    font-family: var(--md-text-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif) !important;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 美化卡片样式 */
+  .hypothesis-annotation-card {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    overflow: hidden !important;
+  }
+
+  .hypothesis-annotation-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 美化 Hypothesis 按钮 */
+  .hypothesis-button {
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+  }
+
+  /* 美化标签样式 */
+  .hypothesis-tag {
+    border-radius: 12px !important;
+    padding: 2px 8px !important;
+    font-size: 12px !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    color: #606060 !important;
+  }
+
+  /* 美化工具栏 */
+  .hypothesis-toolbar {
+    background: linear-gradient(to right, #f5f5f5, #ffffff) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* 美化注释面板header */
+  .hypothesis-annotation-header {
+    padding: 10px !important;
+    background-color: #f9f9f9 !important;
+  }
+
+  /* 美化注释内容 */
+  .hypothesis-annotation-body {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    color: #333 !important;
+  }
+
+  /* 美化用户名 */
+  .hypothesis-user {
+    font-weight: 600 !important;
+    color: #3f51b5 !important;
+  }
+
+  /* 美化时间戳 */
+  .hypothesis-timestamp {
+    font-size: 12px !important;
+    color: #757575 !important;
+  }
+
+  /* 美化输入框 */
+  .hypothesis-input {
+    border-radius: 4px !important;
+    border: 1px solid #e0e0e0 !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  }
+
+  .hypothesis-input:focus {
+    border-color: #4dabf7 !important;
+    box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2) !important;
+    outline: none !important;
+  }
+</style>
+
+<!-- 页面评论系统 -->
+<div class="comments-container utterances-container">
+  <div class="comments-header">
+    <h2 id="__comments" class="comments-title">
+      <span class="comments-icon">💬</span>
+      Comments
+      <span class="comments-subtitle">Share your thoughts!</span>
+    </h2>
+    <div class="comments-divider"></div>
+  </div>
+
+  <div class="comments-wrapper">
+    <script src="https://utteranc.es/client.js" repo="MAD-SG/generative-ai-start-to-surrender" issue-term="pathname" label="comment" theme="preferred-color-scheme" crossorigin="anonymous" async>
+    </script>
+  </div>
+</div>
+
+<style>
+  .comments-container {
+    margin: 2.5rem auto;
+    padding: 1.5rem;
+    background: var(--md-code-bg-color, rgba(0, 0, 0, 0.05));
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .annotation-container {
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 240, 0.5);
+    border-left: 4px solid #ffeb3b;
+  }
+
+  .utterances-container {
+    background: rgba(240, 248, 255, 0.5);
+    border-left: 4px solid #2196f3;
+  }
+
+  .comments-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .comments-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .comments-title {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--md-primary-fg-color, #2196f3);
+    flex-wrap: wrap;
+  }
+
+  .annotation-container .comments-title {
+    color: #f57c00;
+  }
+
+  .comments-icon {
+    font-size: 1.4em;
+  }
+
+  .comments-subtitle {
+    font-size: 0.7em;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-left: 1rem;
+  }
+
+  .comments-divider {
+    height: 3px;
+    background: linear-gradient(90deg,
+      var(--md-primary-fg-color, #2196f3) 0%,
+      rgba(255, 255, 255, 0) 100%);
+    border-radius: 3px;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  .annotation-container .comments-divider {
+    background: linear-gradient(90deg,
+      #f57c00 0%,
+      rgba(255, 255, 255, 0) 100%);
+  }
+
+  .comments-wrapper {
+    position: relative;
+    min-height: 150px;
+    width: 100%;
+  }
+
+  .hypothesis-instructions {
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+  }
+
+  .hypothesis-instructions p {
+    margin-top: 0;
+    font-weight: 500;
+  }
+
+  .hypothesis-instructions ol {
+    margin-bottom: 0;
+    padding-left: 1.5rem;
+  }
+
+  .hypothesis-instructions li {
+    margin-bottom: 0.5rem;
+  }
+
+  .hypothesis-instructions li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* 确保utterances的iframe填充可用宽度 */
+  .utterances-container .comments-wrapper iframe {
+    border-radius: 6px;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* 动画效果 */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 20px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .comments-wrapper {
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  /* 响应式设计 - 小屏幕调整 */
+  @media (max-width: 768px) {
+    .comments-container {
+      padding: 1rem;
+      margin: 1.5rem auto;
+    }
+
+    .comments-title {
+      font-size: 1.3rem;
+    }
+
+    .comments-subtitle {
+      display: block;
+      width: 100%;
+      margin-left: 0;
+      margin-top: 0.3rem;
+    }
+  }
+</style>
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../introduction_sde/" class="md-footer__link md-footer__link--prev" aria-label="Previous: SDE Fundamentals">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                SDE Fundamentals
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../score_based_sde/" class="md-footer__link md-footer__link--next" aria-label="Next: Score Based SDE">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Score Based SDE
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://mad-sg.github.io/generative-ai-start-to-surrender/" target="_blank" rel="noopener" title="mad-sg.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/r/squidfunk/mkdocs-material/" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/mkdocs-material/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/squidfunk.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M407.8 294.7c-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3M288 227.1c-26.1-50.7-97.1-145.2-163.1-191.8C61.6-9.4 37.5-1.7 21.6 5.5 3.3 13.8 0 41.9 0 58.4S9.1 194 15 213.9c19.5 65.7 89.1 87.9 153.2 80.7 3.3-.5 6.6-.9 10-1.4-3.3.5-6.6 1-10 1.4-93.9 14-177.3 48.2-67.9 169.9C220.6 589.1 265.1 437.8 288 361.1c22.9 76.7 49.2 222.5 185.6 103.4 102.4-103.4 28.1-156-65.8-169.9-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3 64.1 7.1 133.6-15.1 153.2-80.7C566.9 194 576 75 576 58.4s-3.3-44.7-21.6-52.9c-15.8-7.1-40-14.9-103.2 29.8C385.1 81.9 314.1 176.4 288 227.1"></path></svg>
+    </a>
+  
+    
+    
+      
+    
+    
+    
+      
+      
+    
+    <a href="https://fosstodon.org/@squidfunk" target="_blank" rel="noopener me" title="fosstodon.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M433 179.1c0-97.2-63.7-125.7-63.7-125.7-62.5-28.7-228.6-28.4-290.5 0 0 0-63.7 28.5-63.7 125.7 0 115.7-6.6 259.4 105.6 289.1 40.5 10.7 75.3 13 103.3 11.4 50.8-2.8 79.3-18.1 79.3-18.1l-1.7-36.9s-36.3 11.4-77.1 10.1c-40.4-1.4-83-4.4-89.6-54-.6-4.6-.9-9.3-.9-13.9 85.6 20.9 158.7 9.1 178.7 6.7 56.1-6.7 105-41.3 111.2-72.9 9.8-49.8 9-121.5 9-121.5zm-75.1 125.2h-46.6V190.1c0-49.7-64-51.6-64 6.9v62.5H201V197c0-58.5-64-56.6-64-6.9v114.2H90.3c0-122.1-5.2-147.9 18.4-175 25.9-28.9 79.8-30.8 103.8 6.1l11.6 19.5 11.6-19.5c24.1-37.1 78.1-34.8 103.8-6.1 23.7 27.3 18.4 53 18.4 175"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/squidfunk" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "toc.integrate", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips", "content.tooltips", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.expand", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.26.1/minified.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html><!-- 段落注释系统
+<div class="comments-container annotation-container">
+  <div class="comments-header">
+    <h2 id="__annotations" class="comments-title">
+      <span class="comments-icon">🔍</span>
+      段落注释
+      <span class="comments-subtitle">您可以高亮并评论任何文本!</span>
+    </h2>
+    <div class="comments-divider"></div>
+  </div>
+
+  <div class="comments-wrapper">
+    <div class="hypothesis-instructions">
+      <p><strong>如何使用段落注释功能：</strong></p>
+      <ol>
+        <li>点击右上角的 <img src="https://hypothes.is/assets/images/logo.png" alt="Hypothesis" style="height: 16px; vertical-align: middle;"> 图标打开侧边栏</li>
+        <li>选择任意文本段落即可高亮并添加注释</li>
+        <li>您还可以对其他人的注释进行回复</li>
+      </ol>
+    </div>
+  </div>
+</div> --><!-- 加载  -->

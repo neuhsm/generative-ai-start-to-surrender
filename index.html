@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Generative AI: From start to surrender</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A comprehensive guide to modern generative models, from mathematical foundations to practical implementations">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Modern color palette */
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #8b5cf6;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            /* Neutral colors */
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            /* Dark mode colors */
+            --dark-bg: #0a0a0f;
+            --dark-surface: #1a1a23;
+            --dark-surface-2: #2a2a3a;
+            --dark-text: #e4e4e7;
+            --dark-text-muted: #a1a1aa;
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --space-3xl: 4rem;
+            
+            /* Typography */
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+            
+            /* Border radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: var(--gray-800);
+            background: linear-gradient(135deg, 
+                rgba(99, 102, 241, 0.05) 0%, 
+                rgba(139, 92, 246, 0.05) 25%, 
+                rgba(236, 72, 153, 0.05) 50%, 
+                rgba(6, 182, 212, 0.05) 75%, 
+                rgba(16, 185, 129, 0.05) 100%);
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: all 0.3s ease;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gray-50);
+            opacity: 0.95;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Dark mode */
+        body.dark {
+            color: var(--dark-text);
+        }
+
+        body.dark::after {
+            background: var(--dark-bg);
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: var(--space-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dark .theme-toggle {
+            background: rgba(26, 26, 35, 0.9);
+            border-color: var(--gray-600);
+            color: var(--dark-text);
+        }
+
+        /* Hero styles */
+        .hero {
+            background: linear-gradient(135deg, 
+                rgba(99, 102, 241, 0.95) 0%, 
+                rgba(139, 92, 246, 0.95) 50%, 
+                rgba(236, 72, 153, 0.95) 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 20s ease infinite;
+            color: white;
+            padding: clamp(4rem, 12vw, 8rem) clamp(1.5rem, 5vw, 3rem);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            margin: var(--space-lg);
+            border-radius: var(--radius-2xl);
+            backdrop-filter: blur(20px);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx=".5" cy=".5" r=".8"><stop offset="0%" stop-color="%23ffffff" stop-opacity=".1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><rect width="100%25" height="100%25" fill="url(%23a)"/></svg>');
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-weight: 800;
+            margin-bottom: clamp(1.5rem, 4vw, 2rem);
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            padding: 0 var(--space-lg);
+            animation: fadeInScale 2s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-weight: 400;
+            margin: 0 auto;
+            max-width: 600px;
+            opacity: 0.95;
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+        }
+
+        .hero h1 span {
+            display: inline-block;
+        }
+
+        .word1 {
+            color: #FF4500;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s infinite alternate, colorChange 5s infinite alternate;
+        }
+
+        .word2 {
+            color: #34A85A;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: rotate 3s infinite linear, pulse 5s infinite alternate;
+        }
+
+        .word3 {
+            color: #8E44AD;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: scale 2.5s infinite alternate, colorChange 5s infinite alternate;
+        }
+
+        .word4 {
+            color: #FFC107;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: skew 3s infinite alternate, pulse 5s infinite alternate;
+        }
+
+        .word5 {
+            color: #2196F3;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: slide 3s infinite alternate, colorChange 5s infinite alternate;
+        }
+
+        .word6 {
+            color: #9C27B0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fade 3s infinite alternate, pulse 5s infinite alternate;
+        }
+
+        /* Modern Grid Layouts */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+            gap: var(--space-xl);
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-xl);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-xl);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card h3 {
+            color: var(--primary-dark);
+            margin-top: 0;
+            font-weight: 600;
+            font-size: 1.25rem;
+            letter-spacing: -0.01em;
+            padding: var(--space-lg);
+        }
+
+        .dark .card {
+            background: rgba(26, 26, 35, 0.95);
+            border-color: var(--gray-600);
+        }
+
+        .dark .card h3 {
+            color: var(--dark-text);
+        }
+
+        /* Feature icon styles */
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            padding: 0.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* CTA button styles */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+        }
+
+        /* Navigation section styles */
+        .navigation-section {
+            padding: 3rem 2rem;
+        }
+
+        /* Reading list section styles */
+        .reading-list-section {
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, rgba(245, 247, 250, 0.8), rgba(230, 235, 245, 0.8));
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .reading-checklist {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .reading-checklist li {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .reading-checklist li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .reading-checklist input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .reading-checklist label {
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .reading-checklist a {
+            color: #2c3e50;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .reading-checklist a:hover {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+        .reading-icon {
+            margin-right: 0.5rem;
+            font-size: 1.2em;
+        }
+
+        .add-reading-item {
+            margin-top: 1rem;
+        }
+
+        .reading-input {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .add-reading-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-reading-btn:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Word Cloud Styles */
+        .word-cloud-section {
+            padding: 2rem 0;
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .word-cloud-container {
+            max-width: 1000px;
+            height: 300px;
+            margin: 0 auto;
+            position: relative;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .word-cloud-title {
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .word-cloud-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #3498db, #9b59b6);
+            border-radius: 3px;
+        }
+
+        .cloud-word {
+            position: absolute;
+            transform-origin: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+            z-index: 2;
+        }
+
+        .cloud-word:hover {
+            transform: scale(1.15) !important;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            text-decoration: none;
+        }
+
+        /* Topic Cards Styles */
+        .topic-cards-section {
+            padding: 2rem 1rem;
+        }
+
+        .topic-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .topic-title {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 0.5rem;
+        }
+
+        .topic-links {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .topic-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .topic-links a {
+            color: #3498db;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .topic-links a:hover {
+            text-decoration: underline;
+        }
+
+        .topic-icon {
+            margin-right: 0.5rem;
+            font-size: 1.2em;
+        }
+
+        /* Updated Card Styles */
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: #7f8c8d;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card ul {
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card .cta-button {
+            margin-top: auto;
+        }
+
+        /* Integrated Content Section Styles */
+        .integrated-content-section {
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, rgba(245, 247, 250, 0.9), rgba(230, 235, 245, 0.9));
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, #3498db, #9b59b6);
+            border-radius: 3px;
+        }
+
+        .integrated-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); /* ⬅️ 确保最小 300px，不会挤压 */
+            gap: 8.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            align-items: stretch; /* ⬅️ 让所有卡片高度一致 */
+        }
+
+        .integrated-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 280px; /* ⬅️ 设定一个合理的最小高度 */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .integrated-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .integrated-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #3498db, #9b59b6);
+        }
+
+        .integrated-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 0.8rem;
+        }
+
+        .integrated-card-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
+            padding: 0.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .integrated-card-title {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .integrated-card-description {
+            color: #4a5568;
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .integrated-card-links {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .integrated-card-link {
+            display: flex;
+            align-items: center;
+            color: #4f46e5;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .integrated-card-link:hover {
+            background: rgba(79, 70, 229, 0.1);
+            transform: translateX(3px);
+            text-decoration: none;
+        }
+
+        .integrated-link-icon {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Section styles */
+        .section {
+            padding: clamp(2rem, 5vw, 4rem);
+            background: rgba(255, 255, 255, 0.85);
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .reading-list-section,
+        .integrated-content-section,
+        .navigation-section,
+        .topic-section,
+        .feature-section {
+            padding: clamp(2rem, 5vw, 4rem);
+            background: rgba(255, 255, 255, 0.85);
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .integrated-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: var(--space-lg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: var(--space-2xl) var(--space-lg);
+                margin: var(--space-md);
+            }
+            
+            .hero h1 {
+                font-size: clamp(2rem, 8vw, 3rem);
+                gap: var(--space-xs);
+            }
+            
+            .integrated-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+            
+            .theme-toggle {
+                top: var(--space-md);
+                right: var(--space-md);
+            }
+            
+            .section,
+            .navigation-section,
+            .reading-list-section,
+            .integrated-content-section {
+                margin: var(--space-md);
+                padding: var(--space-xl) var(--space-lg);
+            }
+            
+            .container, .grid-container {
+                padding: 0 var(--space-lg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                flex-direction: column;
+                gap: var(--space-xs);
+            }
+            
+            .cta-button {
+                padding: var(--space-md) var(--space-lg);
+                font-size: 0.9rem;
+            }
+            
+            .integrated-card {
+                padding: var(--space-lg);
+            }
+            
+            .word-cloud-container {
+                height: 250px;
+            }
+        }
+
+        /* Animations */
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animate-on-scroll.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* High contrast and reduced motion support */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary: #0066cc;
+                --secondary: #cc0066;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span>
+    </button>
+
+    <div class="hero animate-on-scroll">
+        <h1><span class="word1"> Generative </span> <span class="word2"> AI </span> <span class="word3">From</span> <span class="word4">start</span> <span class="word5">to</span> <span class="word6">surrender</span></h1>
+        <p>A comprehensive guide to modern generative models, from mathematical foundations to practical implementations</p>
+    </div>
+
+    <!-- Word Cloud Section -->
+    <div class="word-cloud-section animate-on-scroll">
+        <h2 class="word-cloud-title">Explore Topics</h2>
+        <div class="word-cloud-container" id="wordCloud">
+            <!-- Word cloud will be populated by JavaScript -->
+        </div>
+    </div>
+
+
+
+
+    <!-- Integrated Content Section -->
+    <div class="integrated-content-section animate-on-scroll">
+        <h2 class="section-title">Explore Key Resources</h2>
+        <div class="integrated-grid">
+
+
+            <!-- Theoretical Foundations Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🧮</div>
+                    <h3 class="integrated-card-title">Theoretical Foundations</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Master the mathematical concepts behind generative models.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter2_generation_theory/manifold_hypothesis/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> Manifold Hypothesis
+                    </a>
+                    <a href="book/chapter2_generation_theory/probability_view/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📝</span> Maximum Likelihood Estimation
+                    </a>
+                    <a href="book/chapter2_generation_theory/score_matching/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> Score Matching
+                    </a>
+                </div>
+            </div>
+
+            <!-- Energy-Based Models Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">⚡</div>
+                    <h3 class="integrated-card-title">Energy Based Models</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Deep dive into energy-based modeling approaches.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter3_energy_based_model/introduction/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> Score Functions
+                    </a>
+                    <a href="book/chapter3_energy_based_model/mcmc/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> Sampling Methods
+                    </a>
+                    <a href="book/chapter3_energy_based_model/contrastive_divergence/" class="integrated-card-link">
+                        <span class="integrated-link-icon">⚙️</span> Contrastive Divergence
+                    </a>
+                </div>
+            </div>
+
+            <!-- Modern Architectures Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🏗️</div>
+                    <h3 class="integrated-card-title">Modern Architectures</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Study cutting-edge generative models and architectures.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🎨</span> StyleGAN Family
+                    </a>
+                    <a href="book/chapter7_diffusion/general_diffusion_model/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🌊</span> Diffusion Models
+                    </a>
+                    <a href="book/chapter9_flow_matching/introduction/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔄</span> Flow Matching
+                    </a>
+                </div>
+            </div>
+
+            <!-- Diffusion Models Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">📊</div>
+                    <h3 class="integrated-card-title">Diffusion Models</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Explore the mathematical foundations of diffusion models and their applications in generative AI.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter7_diffusion/general_diffusion_model/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> General Theory
+                    </a>
+                    <a href="book/chapter7_diffusion/ddpm/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📝</span> DDPM Implementation
+                    </a>
+                    <a href="book/chapter7_diffusion/ldm/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> Latent Diffusion
+                    </a>
+                </div>
+            </div>
+
+            <!-- GAN Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🎨</div>
+                    <h3 class="integrated-card-title">GAN Evolution</h3>
+                </div>
+                <p class="integrated-card-description">
+                    From original GAN to StyleGAN: The evolution of generative adversarial networks and their capabilities.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter5_GAN/3.1from_gan_to_stylegan/paper/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> StyleGAN Architecture
+                    </a>
+                    <a href="book/chapter5_GAN/3.1from_gan_to_stylegan/paper/#2014gan--generative-adversarial-networks" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> Original GAN
+                    </a>
+                </div>
+            </div>
+
+            <!-- VAE Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🧠</div>
+                    <h3 class="integrated-card-title">Variational Autoencoders</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Understanding variational autoencoders and their probabilistic approach to generative modeling.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter6_VAE/vae_introduction/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> VAE Theory
+                    </a>
+                    <a href="book/chapter6_VAE/vq_vae/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📝</span> Vector Quantized VAE
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stable Diffusion Card -->
+            <div class="integrated-card">
+                <div class="integrated-card-header">
+                    <div class="integrated-card-icon">🚀</div>
+                    <h3 class="integrated-card-title">Stable Diffusion Series</h3>
+                </div>
+                <p class="integrated-card-description">
+                    Deep dive into the Stable Diffusion family of models and their state-of-the-art capabilities.
+                </p>
+                <div class="integrated-card-links">
+                    <a href="book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series/" class="integrated-card-link">
+                        <span class="integrated-link-icon">📘</span> Series Overview
+                    </a>
+                    <a href="book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_3_reading/" class="integrated-card-link">
+                        <span class="integrated-link-icon">🔍</span> SD3 Deep Dive
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="reading-list-section animate-on-scroll">
+        <div class="grid-container">
+            <div class="card">
+                <h3><span class="reading-icon">📚</span> Reading List</h3>
+                <p>Papers and blogs for future reading:</p>
+                <div id="reading-list-content" class="reading-checklist">
+                    <!-- Content will be loaded from reading_list.md -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function convertMarkdownCheckbox(line) {
+            // 匹配 Markdown 任务列表格式
+            const checkboxPattern = /^-\s*\[([ xX])\]\s*\[(.*?)\]\((.*?)\)/;
+
+            const match = line.match(checkboxPattern);
+            if (!match) return null; // 不是复选框项，忽略
+
+            const checked = match[1].toLowerCase() === 'x' ? 'checked' : ''; // 解析是否已勾选
+            const linkText = match[2]; // 链接文本
+            const linkUrl = match[3]; // 链接 URL
+
+            return `
+                <div class="reading-item">
+                    <input type="checkbox" class="reading-checkbox" ${checked}>
+                    <a href="${linkUrl}" target="_blank">${linkText}</a>
+                </div>
+            `;
+        }
+
+        function setupCheckboxListeners() {
+            document.querySelectorAll('.reading-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (event) => {
+                    console.log(`Checkbox state changed: ${event.target.checked}`);
+                });
+            });
+        }
+
+        async function loadReadingList() {
+            try {
+                const response = await fetch('/assets/reading_list.txt'); // 读取 Markdown 文件
+                const text = await response.text();
+                console.log('Reading list content:', text);
+
+                const lines = text.split('\n'); // 拆分 Markdown 行
+                const listContent = lines
+                    .map(line => convertMarkdownCheckbox(line)) // 解析 Markdown 复选框
+                    .filter(html => html) // 过滤无效项
+                    .join(''); // 组合 HTML
+
+                document.getElementById('reading-list-content').innerHTML = listContent;
+
+                // 监听复选框变化（不持久化，仅前端交互）
+                setupCheckboxListeners();
+            } catch (error) {
+                console.error('Error loading reading list:', error);
+            }
+        }
+
+        loadReadingList();
+
+    </script>
+
+    <script>
+        // Dark mode functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark');
+            themeIcon.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            
+            if (body.classList.contains('dark')) {
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                } else {
+                    entry.target.classList.remove('in-view');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animatable elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatableElements = document.querySelectorAll('.animate-on-scroll');
+            animatableElements.forEach(el => observer.observe(el));
+        });
+
+        // Add smooth scrolling to all links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+        // Word Cloud Implementation
+        function createWordCloud() {
+            const words = [
+                { text: "Diffusion", size: 70, color: "#3498db", url: "book/chapter7_diffusion/general_diffusion_model/" },
+                { text: "GAN", size: 65, color: "#e74c3c", url: "book/chapter5_GAN/3.1from_gan_to_stylegan/paper/" },
+                { text: "VAE", size: 60, color: "#2ecc71", url: "book/chapter6_VAE/vae_introduction/" },
+                { text: "StyleGAN", size: 55, color: "#9b59b6", url: "book/chapter5_GAN/3.1from_gan_to_stylegan/paper/" },
+                { text: "Flow Matching", size: 50, color: "#f39c12", url: "book/chapter9_flow_matching/introduction/" },
+                { text: "Score Matching", size: 45, color: "#1abc9c", url: "book/chapter3_energy_based_model/introduction/" },
+                { text: "Stable Diffusion", size: 65, color: "#e67e22", url: "book/chapter11_hybrid_sota_models/sota_open_models/stable_diffusion_series/" },
+                { text: "Manifold", size: 40, color: "#34495e", url: "book/chapter2_generation_theory/manifold_hypothesis/" },
+                { text: "Energy Based", size: 45, color: "#16a085", url: "book/chapter3_energy_based_model/introduction/" },
+                { text: "Latent Space", size: 50, color: "#27ae60", url: "book/chapter6_VAE/vae_introduction/" },
+                { text: "DDPM", size: 55, color: "#d35400", url: "book/chapter7_diffusion/ddpm/" },
+                { text: "SDE", size: 45, color: "#2980b9", url: "book/chapter7_diffusion/introduction_sde/" },
+                { text: "ODE", size: 40, color: "#8e44ad", url: "book/chapter7_diffusion/probability_flow_ode/" },
+                { text: "MLE", size: 35, color: "#c0392b", url: "book/chapter2_generation_theory/mle/" },
+                { text: "Guidance", size: 50, color: "#f1c40f", url: "book/chapter7_diffusion/sde_diffusion_guidance/" }
+            ];
+
+            const cloudContainer = document.getElementById('wordCloud');
+            const containerWidth = cloudContainer.offsetWidth;
+            const containerHeight = 300; // Fixed height
+
+            // Set container height explicitly
+            cloudContainer.style.height = `${containerHeight}px`;
+
+            // Clear any existing content
+            cloudContainer.innerHTML = '';
+
+            // Sort words by size (larger words first)
+            const sortedWords = [...words].sort((a, b) => b.size - a.size);
+
+            // Keep track of placed areas to prevent overlap
+            const placedAreas = [];
+
+            // Calculate word dimensions (approximate)
+            function getWordDimensions(word) {
+                const fontSize = word.size / 10;
+                // Approximate width based on text length and font size
+                const width = word.text.length * fontSize * 0.6 * 16;
+                const height = fontSize * 1.5 * 16;
+                return { width, height };
+            }
+
+            // Check if a new placement overlaps with existing words
+            function doesOverlap(x, y, width, height) {
+                const buffer = 10; // Extra space between words
+                for (const area of placedAreas) {
+                    if (
+                        x < area.x + area.width + buffer &&
+                        x + width + buffer > area.x &&
+                        y < area.y + area.height + buffer &&
+                        y + height + buffer > area.y
+                    ) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // Find a valid position for each word
+            sortedWords.forEach(word => {
+                const { width, height } = getWordDimensions(word);
+
+                // Try to place the word in a valid position
+                let placed = false;
+                let attempts = 0;
+                const maxAttempts = 100;
+
+                while (!placed && attempts < maxAttempts) {
+                    attempts++;
+
+                    // Start with center positions and gradually spiral outward
+                    const centerX = containerWidth / 2;
+                    const centerY = containerHeight / 2;
+
+                    // Calculate position with some randomness but focus on center for larger words
+                    const distanceFromCenter = Math.random() * (attempts / 10);
+                    const angle = Math.random() * Math.PI * 2;
+
+                    const x = centerX + Math.cos(angle) * distanceFromCenter * 30 - width / 2;
+                    const y = centerY + Math.sin(angle) * distanceFromCenter * 30 - height / 2;
+
+                    // Make sure word is within container bounds
+                    if (x < 0 || x + width > containerWidth || y < 0 || y + height > containerHeight) {
+                        continue;
+                    }
+
+                    // Check if it overlaps with existing words
+                    if (!doesOverlap(x, y, width, height)) {
+                        // Position is valid, place the word
+                        placedAreas.push({ x, y, width, height });
+
+                        const wordElement = document.createElement('a');
+                        wordElement.href = word.url;
+                        wordElement.className = 'cloud-word';
+                        wordElement.textContent = word.text;
+                        wordElement.style.fontSize = `${word.size / 10}rem`;
+                        wordElement.style.color = word.color;
+                        wordElement.style.left = `${x}px`;
+                        wordElement.style.top = `${y}px`;
+
+                        // Random slight rotation (less extreme)
+                        const rotation = Math.random() * 20 - 10;
+                        wordElement.style.transform = `rotate(${rotation}deg)`;
+
+                        cloudContainer.appendChild(wordElement);
+                        placed = true;
+                    }
+                }
+
+                // Fallback if we couldn't place the word after many attempts
+                if (!placed) {
+                    const wordElement = document.createElement('a');
+                    wordElement.href = word.url;
+                    wordElement.className = 'cloud-word';
+                    wordElement.textContent = word.text;
+                    wordElement.style.fontSize = `${Math.max(1, word.size / 15)}rem`;
+                    wordElement.style.color = word.color;
+
+                    // Place it anywhere available
+                    const x = Math.random() * (containerWidth - 100);
+                    const y = Math.random() * (containerHeight - 30);
+
+                    wordElement.style.left = `${x}px`;
+                    wordElement.style.top = `${y}px`;
+                    wordElement.style.zIndex = '1'; // Lower z-index for fallback words
+
+                    cloudContainer.appendChild(wordElement);
+                }
+            });
+        }
+
+        // Initialize word cloud on page load
+        window.addEventListener('load', () => {
+            createWordCloud();
+
+            // Recreate word cloud on window resize
+            window.addEventListener('resize', () => {
+                createWordCloud();
+            });
+        });
+    </script>
+</body>
+</html>
